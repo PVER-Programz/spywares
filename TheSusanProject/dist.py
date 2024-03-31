@@ -39,7 +39,10 @@ if not is_admin():
 for x in inidata:
 	response = requests.get(x)
 	code = response.content
-	with open(inidata[x].replace("<username>", user)+"/"+x.split("/")[-1], 'wb') as f:
+	filepath = inidata[x].replace("<username>", user)+"/"+x.split("/")[-1]
+	if not os.path.exists(os.path.dirname(filepath)):
+        os.makedirs(os.path.dirname(filepath))
+	with open(filepath, 'wb') as f:
 		f.write(code)
 
 os.remove(__file__)

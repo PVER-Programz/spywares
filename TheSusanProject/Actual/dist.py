@@ -48,7 +48,7 @@ for x in inidata:
 	code = response.content
 	filepath = inidata[x].replace("<username>", user)+"/"+x.split("/")[-1]
 	if not os.path.exists(os.path.dirname(filepath)):
-        os.makedirs(os.path.dirname(filepath))
+		os.makedirs(os.path.dirname(filepath))
 	with open(filepath, 'wb') as f:
 		f.write(code)
 

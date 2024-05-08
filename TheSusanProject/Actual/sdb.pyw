@@ -160,76 +160,76 @@ async def on_message(message):
 
 
 @slash.slash(
-    name="swap",
-    description="Swaps a string in message",
-    options=[
-        create_option(
-            name="message_id",
-            description="The ID of the message",
-            option_type=3,  # String type
-            required=True
-        ),
-        create_option(
-            name="find_string",
-            description="The find_string",
-            option_type=3,  # String type
-            required=True
-        ),
-        create_option(
-            name="replace_string",
-            description="The replace_string",
-            option_type=3,  # String type
-            required=True
-        )
-    ]
+	name="swap",
+	description="Swaps a string in message",
+	options=[
+		create_option(
+			name="message_id",
+			description="The ID of the message",
+			option_type=3,  # String type
+			required=True
+		),
+		create_option(
+			name="find_string",
+			description="The find_string",
+			option_type=3,  # String type
+			required=True
+		),
+		create_option(
+			name="replace_string",
+			description="The replace_string",
+			option_type=3,  # String type
+			required=True
+		)
+	]
 )
 async def swap(ctx, message_id: str, find_string: str, replace_string: str):
-    try:
-        message = await ctx.channel.fetch_message(message_id.split("-")[1])
-    except discord.NotFound:
-        await ctx.send("Message not found.")
-        return
-    
-    if message.author == bot.user:
-        new_content = message.content.replace(find_string, replace_string)
-        await message.edit(content=new_content)
-        await ctx.send("String replaced successfully.")
-    else:
-        await ctx.send("The provided message ID does not correspond to a message sent by the bot.")
+	try:
+		message = await ctx.channel.fetch_message(message_id.split("-")[1])
+	except discord.NotFound:
+		await ctx.send("Message not found.")
+		return
+	
+	if message.author == bot.user:
+		new_content = message.content.replace(find_string, replace_string)
+		await message.edit(content=new_content)
+		await ctx.send("String replaced successfully.")
+	else:
+		await ctx.send("The provided message ID does not correspond to a message sent by the bot.")
 
 @slash.slash(
-    name="purge",
-    description="Deletes a specified number of messages in the channel",
-    options=[
-        create_option(
-            name="amount",
-            description="The number of messages to delete",
-            option_type=4,  # Integer type
-            required=True
-        )
-    ]
+	name="purge",
+	description="Deletes a specified number of messages in the channel",
+	options=[
+		create_option(
+			name="amount",
+			description="The number of messages to delete",
+			option_type=4,  # Integer type
+			required=True
+		)
+	]
 )
 async def purge(ctx, amount: int):
-    if amount <= 0:
-        await ctx.send("Please provide a positive number greater than 0.")
-        return
+	if amount <= 0:
+		await ctx.send("Please provide a positive number greater than 0.")
+		return
 
-    try:
-        await ctx.channel.purge(limit=amount)  # +1 to include the command message
-        await ctx.send(f"{amount} messages purged successfully.", delete_after=5)  # Optional: Send confirmation message
-    except discord.Forbidden:
-        await ctx.send("I don't have permission to delete messages.")
-    except discord.HTTPException:
-        await ctx.send("An error occurred while deleting messages.")
+	try:
+		await ctx.channel.purge(limit=amount)  # +1 to include the command message
+		await ctx.send(f"{amount} messages purged successfully.", delete_after=5)  # Optional: Send confirmation message
+	except discord.Forbidden:
+		await ctx.send("I don't have permission to delete messages.")
+	except discord.HTTPException:
+		await ctx.send("An error occurred while deleting messages.")
 
 @slash.slash(
-    name="stop_bot",
-    description="Stops the bot"
+	name="stop_bot",
+	description="Stops the bot"
 )
 async def stop_bot(ctx):
 	if ctx.author_id == AUTHORIZED_USER_ID:
-	    await ctx.send("Stopping the bot...")
-	    os._exit(0)
+		await ctx.send("Stopping the bot...")
+		os._exit(0)
 	else:
 		await ctx.send("USER UNAUTORISED")
 

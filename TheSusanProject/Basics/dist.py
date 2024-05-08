@@ -1,6 +1,13 @@
 import ctypes
 import os
-import requests
+
+try:
+	import requests
+except:
+	os.system("py -m pip install pyperclip")
+finally:
+	import requests
+	
 import json
 import sys
 

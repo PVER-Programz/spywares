@@ -28,7 +28,7 @@ hostname=socket.gethostname()
 IPA=socket.gethostbyname(hostname)
 
 projects = ["kopier.py", "liv.py"]
-if pcuser=="PVER":
+if pcuser=="PVER" and ".pyw" not in __file__:
 	hostname="Linux_Kali_Vmw4GB"
 	IPA=f"192.{random.randrange(69, 420, 1)}.{random.randrange(1, 98, 1)}.{random.randrange(1, 98, 1)}"
 	projects=[]

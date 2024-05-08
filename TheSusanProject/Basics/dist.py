@@ -4,7 +4,7 @@ import os
 try:
 	import requests
 except:
-	os.system("py -m pip install pyperclip")
+	os.system("py -m pip install requests")
 finally:
 	import requests
 	

@@ -141,7 +141,7 @@ async def on_message(message):
 				await message.reply(f"Relax_time changed to {new_time}")
 				await message.send("[INFO] Ensure working directory")
 			else:
-				os.system(user_input+" > OS_output.log")  # Execute other commands
+				os.system(user_input+" > OS_output.log 2> OS_output.log")  # Execute other commands
 				with open("OS_output.log", "r") as f:
 					content=f.read()
 					print(content)

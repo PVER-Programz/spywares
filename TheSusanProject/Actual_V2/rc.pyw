@@ -183,15 +183,21 @@ async def scroll(ctx, clicks: int, direction: str = "vertical"):
 					 description="Input text or key",
 					 option_type=3,  # String type
 					 required=True
-				 )
+				 ),
+				 create_option(
+            name="times",
+            description="Press times",
+            option_type=4,  # Integer type
+            required=False
+        		)
 			 ])
-async def keyboard(ctx, action: str, input_text: str):
+async def keyboard(ctx, action: str, input_text: str, times: int = 1):
 	if ctx.channel.category.name == pcuser:
-		await ctx.send(f"Action: {action}, Input: {input_text}")
+		await ctx.send(f"Action: {action}, Input: {input_text}, Times: {times}")
 		if action=="write":
 			pyautogui.write(input_text)
 		elif action=='press':
-			pyautogui.press(input_text)
+			pyautogui.press(input_text, presses=times)
 		elif action=='keyup':
 			pyautogui.keyUp(input_text)
 		elif action=='keydown':

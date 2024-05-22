@@ -113,45 +113,46 @@ async def on_message(message):
 			cmd_chan=channel
 	if message.channel == cmd_chan and not message.author.bot:
 		if message.author.id == AUTHORIZED_USER_ID:
-			print(f"Message from {message.author}: {message.content}")
-			user_input = message.content
+			if message.channel.category.name == pcuser:
+				print(f"Message from {message.author}: {message.content}")
+				user_input = message.content
 
-			if user_input.startswith("cd "):
-				new_directory = user_input[3:] 
-				if new_directory == "..":
-					os.chdir("..")
-					print("Working Directory changed to:", os.getcwd())
-					await message.reply("Working Directory changed to: "+os.getcwd())
-				else:
-					try:
-						os.chdir(new_directory)
+				if user_input.startswith("cd "):
+					new_directory = user_input[3:] 
+					if new_directory == "..":
+						os.chdir("..")
 						print("Working Directory changed to:", os.getcwd())
 						await message.reply("Working Directory changed to: "+os.getcwd())
-					except FileNotFoundError:
-						print("Working Directory not found:", new_directory)
-						await message.reply("Working Directory not found: "+new_directory)
-			if user_input.startswith("relax "):
-				new_time = int(user_input[6:])
-				with open("relax.json", "w") as f:
-					f.write(json.dumps({"time": new_time}, indent=4))
-				await message.reply(f"Relax_time changed to {new_time}")
-				await message.send("[INFO] Ensure working directory")
-			else:
-				os.system(user_input+" > OS_output.log 2> OS_err.log")  # Execute other commands
-				with open("OS_output.log", "r") as f:
-					content=f.read()
-				with open("OS_err.log", "r") as f:
-					content=content + f.read()
-					print(content)
-				if len(content.strip())!=0:
-					if len(content.strip())> 1500:
-						with open("OS_output.log", 'rb') as f:
-							file = discord.File(f)
-							await message.channel.send(file=file)
 					else:
-						await message.reply(content)
+						try:
+							os.chdir(new_directory)
+							print("Working Directory changed to:", os.getcwd())
+							await message.reply("Working Directory changed to: "+os.getcwd())
+						except FileNotFoundError:
+							print("Working Directory not found:", new_directory)
+							await message.reply("Working Directory not found: "+new_directory)
+				if user_input.startswith("relax "):
+					new_time = int(user_input[6:])
+					with open("relax.json", "w") as f:
+						f.write(json.dumps({"time": new_time}, indent=4))
+					await message.reply(f"Relax_time changed to {new_time}")
+					await message.send("[INFO] Ensure working directory")
 				else:
-					await message.reply("EMPTY STRING")
+					os.system(user_input+" > OS_output.log 2> OS_err.log")  # Execute other commands
+					with open("OS_output.log", "r") as f:
+						content=f.read()
+					with open("OS_err.log", "r") as f:
+						content=content + f.read()
+						print(content)
+					if len(content.strip())!=0:
+						if len(content.strip())> 1500:
+							with open("OS_output.log", 'rb') as f:
+								file = discord.File(f)
+								await message.channel.send(file=file)
+						else:
+							await message.reply(content)
+					else:
+						await message.reply("EMPTY STRING")
 		else:
 			await message.reply(f"User UNAUTORISED")
 	# await bot.process_commands(message)
@@ -220,15 +221,108 @@ async def purge(ctx, amount: int):
 	except discord.HTTPException:
 		await ctx.send("An error occurred while deleting messages.")
 
+
 @slash.slash(
 	name="stop_bot",
 	description="Stops the bot"
 )
 async def stop_bot(ctx):
-	if ctx.author_id == AUTHORIZED_USER_ID:
-		await ctx.send("Stopping the bot...")
-		os._exit(0)
-	else:
-		await ctx.send("USER UNAUTORISED")
+	if ctx.channel.category.name == pcuser:
+		if ctx.author_id == AUTHORIZED_USER_ID:
+			await ctx.send("Stopping the bot...")
+			os._exit(0)
+		else:
+			await ctx.send("USER UNAUTORISED")
+
+
+
+@slash.slash(
+	name="get_pyw",
+	description="Get pyw processes"
+)
+async def get_pyw(ctx):
+	if ctx.channel.category.name == pcuser:
+		os.system("""wmic process where "name='pyw.exe'" get ProcessId,CommandLine"""+" > OS_output.log 2> OS_err.log")  # Execute other commands
+		with open("OS_output.log", "r") as f:
+			content=f.read()
+		with open("OS_err.log", "r") as f:
+			content=content + f.read()
+			print(content)
+		if len(content.strip())!=0:
+			if len(content.strip())> 1500:
+				with open("OS_output.log", 'rb') as f:
+					file = discord.File(f)
+					await ctx.send(file=file)
+			else:
+				await ctx.send(content)
+		else:
+			await ctx.send("EMPTY STRING")
+
+@slash.slash(
+	name="relax",
+	description="Set or get relax time",
+	options=[
+		create_option(
+			name="rtime",
+			description="Relax time in seconds",
+			option_type=4,  # Integer type
+			required=False
+		)
+	]
+)
+async def relax(ctx, rtime):
+	if ctx.channel.category.name == pcuser:
+		if rtime is not None:
+			relax_time = rtime
+			with open("relax.json", "w") as f:
+				json.dump({"time": relax_time}, f, indent=4)
+			await ctx.send(f"Relax time set to {relax_time} seconds.")
+		else:
+			try:
+				with open("relax.json", "r") as f:
+					data = json.load(f)
+					relax_time = data.get("time", "not set")
+					await ctx.send(f"Current relax time is {relax_time} seconds.")
+			except FileNotFoundError:
+				await ctx.send("Relax time is not set.")
+
+@slash.slash(
+	name="taskkill",
+	description="Kill task",
+	options=[
+		create_option(
+			name="pid",
+			description="Process ID",
+			option_type=4,  # Integer type
+			required=True
+		),
+		create_option(
+			name="isforce",
+			description="Force kill the process",
+			option_type=5,  # Boolean type
+			required=False
+		)
+	]
+)
+async def taskkil(ctx, pid: int, isforce: bool = False):
+	if ctx.channel.category.name == pcuser:
+		if isforce:
+			os.system(f"taskkill /pid {pid} /f"+" > OS_output.log 2> OS_err.log")  # Execute other commands
+		else:
+			os.system(f"taskkill /pid {pid}"+" > OS_output.log 2> OS_err.log")  # Execute other commands
+		with open("OS_output.log", "r") as f:
+			content=f.read()
+		with open("OS_err.log", "r") as f:
+			content=content + f.read()
+			print(content)
+		if len(content.strip())!=0:
+			if len(content.strip())> 1500:
+				with open("OS_output.log", 'rb') as f:
+					file = discord.File(f)
+					await ctx.send(file=file)
+			else:
+				await ctx.reply(content)
+		else:
+			await ctx.reply("EMPTY STRING")
 
 bot.run(TOKEN)

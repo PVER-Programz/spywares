@@ -1,6 +1,8 @@
 import os
 
-filepath = "c:/systems/sdb.pyw"
+filepath = ["c:/systems/sdb.pyw", "c:/systems/rc.pyw"]
 
 os.chdir("c:/systems")
-os.startfile(filepath)
+
+for file in filepath:
+	os.startfile(file)

@@ -232,37 +232,37 @@ async def stop_bot(ctx):
 
 
 @slash.slash(name="cursor",
-             description="Capture a screenshot with cursor in the middle",
-             guild_ids=[1222734737416912916],  # Replace with your guild ID
-             options=[
-                 create_option(
-                     name="pixels",
-                     description="Size of the screenshot in pixels (e.g., 800)",
-                     option_type=4,  # Integer type
-                     required=True
-                 )
-             ])
+			 description="Capture a screenshot with cursor in the middle",
+			 guild_ids=[1222734737416912916],  # Replace with your guild ID
+			 options=[
+				 create_option(
+					 name="pixels",
+					 description="Size of the screenshot in pixels (e.g., 800)",
+					 option_type=4,  # Integer type
+					 required=True
+				 )
+			 ])
 async def cursor(ctx, pixels: int):
-    if ctx.channel.category.name == pcuser:
-        # Get cursor position
-        x, y = pyautogui.position()
-        
-        # Calculate screenshot coordinates with cursor in the middle
-        x_start = max(0, x - pixels // 2)
-        y_start = max(0, y - pixels // 2)
-        x_end = min(pyautogui.size().width, x + pixels // 2)
-        y_end = min(pyautogui.size().height, y + pixels // 2)
-        
-        # Capture screenshot
-        screenshot = pyautogui.screenshot(region=(x_start, y_start, x_end - x_start, y_end - y_start))
-        
-        # Save screenshot to bytes
-        img_byte_array = BytesIO()
-        screenshot.save(img_byte_array, format="PNG")
-        img_byte_array.seek(0)
-        
-        # Send the screenshot along with cursor coordinates
-        await ctx.send(f"Cursor position: ({x}, {y})", file=discord.File(img_byte_array, "screenshot.png"))
+	if ctx.channel.category.name == pcuser:
+		# Get cursor position
+		x, y = pyautogui.position()
+		
+		# Calculate screenshot coordinates with cursor in the middle
+		x_start = max(0, x - pixels // 2)
+		y_start = max(0, y - pixels // 2)
+		x_end = min(pyautogui.size().width, x + pixels // 2)
+		y_end = min(pyautogui.size().height, y + pixels // 2)
+		
+		# Capture screenshot
+		screenshot = pyautogui.screenshot(region=(x_start, y_start, x_end - x_start, y_end - y_start))
+		
+		# Save screenshot to bytes
+		img_byte_array = BytesIO()
+		screenshot.save(img_byte_array, format="PNG")
+		img_byte_array.seek(0)
+		
+		# Send the screenshot along with cursor coordinates
+		await ctx.send(f"Cursor position: ({x}, {y})", file=discord.File(img_byte_array, "screenshot.png"))
 
 
 bot.run(TOKEN)

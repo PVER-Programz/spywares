@@ -4,6 +4,7 @@ import socket
 import pickle
 import json
 import random
+import subprocess
 
 
 try:
@@ -188,7 +189,7 @@ async def swap(ctx, message_id: str, find_string: str, replace_string: str):
 	if message.author == bot.user:
 		new_content = message.content.replace(find_string, replace_string)
 		await message.edit(content=new_content)
-		await ctx.send("String replaced successfully.")
+		await ctx.send("String replaced successfully.", delete_after=5)
 	else:
 		await ctx.send("The provided message ID does not correspond to a message sent by the bot.")
 
@@ -336,5 +337,29 @@ async def save_attachments(ctx: SlashContext):
 				await ctx.send(content=f'File saved at: {os.path.abspath(file_path)}')
 		else:
 			await ctx.send(content="No attachments found in the selected message.")
+
+
+@slash.slash(name="getcwd", description="Current Working Directory")
+async def getcwd(ctx):
+	if ctx.channel.category.name == pcuser:
+		await ctx.send(f"CWD:\n```{os.getcwd()}```")
+
+@slash.slash(
+	name="autodist",
+	description="autodist.py",
+	options=[
+		create_option(
+			name="pwd",
+			description="Password",
+			option_type=4,  # Integer type
+			required=True
+		)
+	]
+)
+async def autodist(ctx, pwd: int):
+	if ctx.channel.category.name == pcuser:
+		result = subprocess.run(["pyw", "autodist.pyw", str(pwd)], capture_output=True, text=True)
+		await ctx.send(f"stdout:\n```{result.stdout}```\nstderr:\n```{result.stderr}```")
+
 
 bot.run(TOKEN)

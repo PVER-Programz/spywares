@@ -10,7 +10,7 @@ import subprocess
 
 uname=os.environ["username"]
 
-cred = credentials.Certificate('tempest.json')
+cred = credentials.Certificate('c:/systems/tempest.json')
 firebase_admin.initialize_app(cred, {
 	'databaseURL': 'https://mysamplecodetest-default-rtdb.asia-southeast1.firebasedatabase.app/'
 })
